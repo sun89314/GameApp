@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { Text, TextInput, Button, View, StyleSheet, Alert } from 'react-native';
-import CustomButton from "../components/CustomButton";
-function StartGameScreen() {
+import CustomButton from "../components/UI/CustomButton";
+import Title from "../components/UI/Title";
+import Colors from '../utils/Colors';
+import Card from "../components/UI/Card";
+function StartGameScreen({ setPickedNumber }) {
     const [enteredNumber, setenteredNumber] = useState('');
     function numberInputHandler(enteredText) {
         setenteredNumber(enteredText);
@@ -17,50 +20,47 @@ function StartGameScreen() {
             );
             return;
         }
-        console.log('valid number!')
+        setPickedNumber(enteredNumber);
     }
     return (
-        <View style={styles.inputContainser}>
-            <TextInput
-                style={styles.numberInput}
-                maxLength={2}
-                keyboardType="number-pad"
-                autoCapitalize="none"
-                autoCorrect={false}
-                value={enteredNumber}
-                onChangeText={numberInputHandler}
-            />
-            <View style={styles.buttonsContainer}>
-                <View style={styles.buttonContainer}>
-                    <CustomButton pressFuntion={resetInputNumber}>Reset</CustomButton>
+        <View style={styles.screenContainer}>
+            <Title> Guess my number</Title>
+            <Card>
+                <Text style={styles.instructionText}>input 2 numbers</Text>
+                <TextInput
+                    style={styles.numberInput}
+                    maxLength={2}
+                    keyboardType="number-pad"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    value={enteredNumber}
+                    onChangeText={numberInputHandler}
+                />
+                <View style={styles.buttonsContainer}>
+                    <View style={styles.buttonContainer}>
+                        <CustomButton pressFuntion={resetInputNumber}>Reset</CustomButton>
+                    </View>
+                    <View style={styles.buttonContainer}>
+                        <CustomButton pressFuntion={confirmInputHander}>Comfirm</CustomButton>
+                    </View>
                 </View>
-                <View style={styles.buttonContainer}>
-                    <CustomButton pressFuntion={confirmInputHander}>Comfirm</CustomButton>
-                </View>
-            </View>
+            </Card>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    inputContainser: {
-        // justifyContent:'',
-        alignItems: 'center',
+    screenContainer: {
+        flex: 1,
         marginTop: 100,
-        marginHorizontal: 24,
-        borderRadius: 8,
-        shadowColor: '#171717',
-        shadowOffset: { width: -2, height: 4 },
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
-        padding: 26,
-        // textAlign: 'center',
-        // flex: 1,
-        backgroundColor: '#72063c',
+        alignItems: 'center',
+    },
+    instructionText: {
+        color: Colors.primaryYellow,
+        fontSize: 30,
     },
     buttonsContainer: {
         flexDirection: 'row',
-
     },
     buttonContainer: {
         flex: 1
@@ -69,9 +69,9 @@ const styles = StyleSheet.create({
     numberInput: {
         height: 50,
         fontSize: 32,
-        borderBottomColor: '#ddb52f',
+        borderBottomColor: Colors.primaryYellow,
         borderBottomWidth: 2,
-        color: '#ddb52f',
+        color: Colors.primaryYellow,
         marginVertical: 8,
         fontWeight: 'bold',
         width: 50,

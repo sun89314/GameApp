@@ -1,16 +1,41 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, View, ImageBackground } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, ImageBackground, SafeAreaView } from 'react-native';
 import StartGameScreen from './screens/StartGameScreen';
 import { LinearGradient } from 'expo-linear-gradient';
-import * as eva from '@eva-design/eva';
-import { ApplicationProvider, Layout, Text } from '@ui-kitten/components';
-const HomeScreen = () => (
-  <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    <Text category='h1'>HOME</Text>
-  </Layout>
-);
+import InGameScreen from './screens/InGameScreen';
+import EndGameScreen from './screens/EndGameScreen';
+
 export default function App() {
+  const [userNumber, setUserNumber] = useState();
+  const [GameIsOver, setGameIsOver] = useState(false);
+  const [GameRound, setGameRound] = useState(0);
+  function setPickedNumber(pickedNumber) {
+    setUserNumber(pickedNumber);
+  }
+  function gameOverHandler(finalGuess) {
+    setGameIsOver(true);
+    setUserNumber(finalGuess);
+  }
+  function restartFun() {
+    setGameRound(0);
+    setGameIsOver(false);
+    setUserNumber(null);
+  }
+  function updateGameRound() {
+    setGameRound(GameRound + 1);
+  }
+  let screen = <StartGameScreen setPickedNumber={setPickedNumber} />
+  if (userNumber) {
+    screen = <InGameScreen choosenNumber={userNumber} updateGameRound={updateGameRound} gameOverHandler={gameOverHandler} />
+  }
+  if (GameIsOver) {
+    screen = <EndGameScreen
+      finalNumber={userNumber}
+      GameRound={GameRound}
+      restartFun={restartFun}
+    />
+  }
   return (
     <LinearGradient colors={['#4e0329', '#ddb52f']} style={styles.rootScreen}>
       <ImageBackground
@@ -19,7 +44,9 @@ export default function App() {
         style={styles.rootScreen}
         imageStyle={styles.backgroundImage}
       >
-        <StartGameScreen />
+        <SafeAreaView style={styles.rootScreen}>
+          {screen}
+        </SafeAreaView>
       </ImageBackground>
 
     </LinearGradient >
